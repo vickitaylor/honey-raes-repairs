@@ -22,7 +22,7 @@ export const TicketForm = () => {
     const localHoneyUser = localStorage.getItem("honey_user")
     const honeyUserObject = JSON.parse(localHoneyUser)
 
-    // this is the function to run the instructions to run when the submit button is clicked. function has a parameter. 
+    // this is the function to run the instructions when the submit button is clicked. function has a parameter. 
     const handleSaveButtonClick = (event) => {
         event.preventDefault()
 

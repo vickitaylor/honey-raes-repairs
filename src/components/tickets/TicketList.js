@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom"
 import "./Tickets.css"
 
 
-
-export const TicketList = () => {
+// added prop of searchTermState, the key is searchTermState and the value is the actual state
+export const TicketList = ({searchTermState}) => {
     // declared new variable and function using the useState function.   it created an empty array called tickets and a function called setTickets
     const [tickets, setTickets] = useState([])
 
@@ -13,7 +13,7 @@ export const TicketList = () => {
 
     // Created another state variable to display only the emergencies.  by default we do not want to see emergency tickets, so it is set to false. 
     const [emergency, setEmergency] = useState(false)
-    // created new state variable for cutomer open tickets 
+    // created new state variable for customer open tickets 
     const [openOnly, updateOpenOnly] = useState(false)
 
     // added the useNavigate hook for the user create ticket button
@@ -92,7 +92,17 @@ export const TicketList = () => {
         [openOnly]
     )
 
+    // useEffect to filter the original ticket list, to find ones that start with what is being typed into the search, then the tickets that meet the search criteria will be displayed using the filteredTickets state.
+    useEffect( 
+        () => { 
+           const searchedTickets = tickets.filter(ticket => {
+                return ticket.description.toLowerCase().startsWith(searchTermState.toLowerCase())
+           })
 
+           setFiltered(searchedTickets)
+        },
+        [ searchTermState ]
+    )
 
 
     // JSX to display the state
@@ -124,7 +134,7 @@ export const TicketList = () => {
                 // Converting objects to html representation.  And changed the variable being mapped from tickets to filteredTickets to show the customized view.
                 filteredTickets.map(
                     (ticket) => {
-                        return <section className="ticket">
+                        return <section className="ticket" key={ticket.id}>
                             <header>{ticket.description}</header>
                             <footer>Emergency: {ticket.emergency ? "🧨" : "No"}</footer>
                         </section>

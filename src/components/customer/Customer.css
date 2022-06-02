@@ -1,0 +1,20 @@
+.customers { 
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.customer { 
+    background-color: rgba(137, 206, 34, 0.747);
+    border: 2px dotted darkgreen;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.customer__header { 
+    font-size: larger;
+    font-weight: 700;
+    line-height: 3rem;
+}
+
