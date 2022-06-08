@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 export const Employee = ({ id, fullName, email }) => {
     return <section className="employee">
         <div>
+            {/* link to go to EmployeeDetail, and the id is defined in EmployeeList */}
             <Link to={`/employees/${id}`}>Name: {fullName}</Link>
         </div>
         <div>Email: {email}</div>

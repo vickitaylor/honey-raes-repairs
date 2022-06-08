@@ -6,8 +6,8 @@
 }
 
 .customer { 
-    background-color: rgba(137, 206, 34, 0.747);
-    border: 2px dotted darkgreen;
+    background-color: rgb(97, 202, 243);
+    border: 2px dotted purple;
     margin: 0.5rem;
     padding: 0.5rem;
 }

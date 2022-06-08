@@ -1,18 +1,19 @@
-import { EmployeeNav } from "./EmployeeNav"
-import { CustomerNav } from "./CustomerNav"
-import "./NavBar.css"
+import { CustomerForm } from "./CustomerForm"
+import { EmployeeForm } from "./EmployeeForm"
 
-export const NavBar = () => {
+
+// component verifies if a customer of employee is logged in
+export const Profile = () => {
 
     const localHoneyUser = localStorage.getItem("honey_user")
     const honeyUserObject = JSON.parse(localHoneyUser)
 
     if (honeyUserObject.staff) {
         // returns the employee navigation view
-        return < EmployeeNav />
+        return < EmployeeForm />
     } else {
         // returns the customer navigation view
-        return < CustomerNav />
+        return < CustomerForm />
     }
 }
 

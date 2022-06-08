@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 
 
 export const EmployeeDetails = () => { 
+    // the employeeId is what was created in the route. useParams is the hook, variable was defined in the route, it pulls in the object created by the route parameters, and you extract the variable defined here
     const {employeeId} = useParams()
     // creating state variable for the employee 
     const [employee, updateEmployee] =useState({})

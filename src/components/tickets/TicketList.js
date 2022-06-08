@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Ticket } from "./Ticket"
 import "./Tickets.css"
 
 
 // added prop of searchTermState, the key is searchTermState and the value is the actual state
-export const TicketList = ({searchTermState}) => {
+export const TicketList = ({ searchTermState }) => {
     // declared new variable and function using the useState function.   it created an empty array called tickets and a function called setTickets
     const [tickets, setTickets] = useState([])
 
@@ -15,6 +16,8 @@ export const TicketList = ({searchTermState}) => {
     const [emergency, setEmergency] = useState(false)
     // created new state variable for customer open tickets 
     const [openOnly, updateOpenOnly] = useState(false)
+    // new state variable for employees
+    const [employees, setEmployees] = useState([])
 
     // added the useNavigate hook for the user create ticket button
     const navigate = useNavigate()
@@ -25,19 +28,34 @@ export const TicketList = ({searchTermState}) => {
     // converting it from a string to an object
     const honeyUserObject = JSON.parse(localHoneyUser)
 
-    // this useEffect is fetching the tickets from the api
+    // declared function to run the fetch and now can invoke the function whenever we want. have to pass the function to the props
+    const getAllTickets = () => {
+        fetch(`http://localhost:8088/serviceTickets?&_embed=employeeTickets`)
+            .then(response => response.json())
+            .then((ticketArray) => {
+                setTickets(ticketArray)
+            })
+    }
+
+    // this useEffect is fetching the tickets from the api, updated the URL to embed employee tickets to show if the ticket has been claimed or to claim the ticket. 
+    // Added another fetch to get the employees and expanded users 
+    // the fetch call only runs on initial render, removed the fetch for serviceTickets with embeded employeeTickets and replaced with the function getAllTickets
     useEffect(
         () => {
-            fetch(`http://localhost:8088/serviceTickets`)
+            getAllTickets()
+
+            fetch(`http://localhost:8088/employees?_expand=user`)
                 .then(response => response.json())
                 // placing a parameter to capture the array after json processing
-                .then((ticketArray) => {
+                .then((employeeArray) => {
                     // then calling the setter function of setTickets and passing the value of ticketArray
-                    setTickets(ticketArray)
+                    setEmployees(employeeArray)
                 })
         },
         [] // When this array is empty, you are observing initial component state
+
     )
+
 
     // determines if all tickets should be shown or some tickets based on the staff property of the local user object (which shorted isStaff to staff).  if a customer it will show only the customer tickets.  done so by observing tickets state
     useEffect(
@@ -93,15 +111,15 @@ export const TicketList = ({searchTermState}) => {
     )
 
     // useEffect to filter the original ticket list, to find ones that start with what is being typed into the search, then the tickets that meet the search criteria will be displayed using the filteredTickets state.
-    useEffect( 
-        () => { 
-           const searchedTickets = tickets.filter(ticket => {
+    useEffect(
+        () => {
+            const searchedTickets = tickets.filter(ticket => {
                 return ticket.description.toLowerCase().startsWith(searchTermState.toLowerCase())
-           })
+            })
 
-           setFiltered(searchedTickets)
+            setFiltered(searchedTickets)
         },
-        [ searchTermState ]
+        [searchTermState]
     )
 
 
@@ -127,21 +145,18 @@ export const TicketList = ({searchTermState}) => {
                 </>
         }
 
-        <h2>List of Tickets</h2>
+        < h2 > List of Tickets</h2 >
 
         <article className="tickets">
             {
-                // Converting objects to html representation.  And changed the variable being mapped from tickets to filteredTickets to show the customized view.
-                filteredTickets.map(
-                    (ticket) => {
-                        return <section className="ticket" key={ticket.id}>
-                            <header>{ticket.description}</header>
-                            <footer>Emergency: {ticket.emergency ? "🧨" : "No"}</footer>
-                        </section>
-                    }
+                // Converting objects to html representation.  And changed the variable being mapped from tickets to filteredTickets to show the customized view. added new component of Ticket for the jsx renderment. added staff and ticket props that are being used in the Tickets component.  Added employees as a prop when added the employee state 
+                filteredTickets.map((ticket) => <Ticket key={`ticket--${ticket.id}`}
+                    currentUser={honeyUserObject}
+                    getAllTickets={getAllTickets}
+                    ticketObject={ticket}
+                    employees={employees} />
                 )
             }
         </article>
     </>
 }
-
