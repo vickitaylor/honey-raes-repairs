@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
+import { getEmployeeDetails } from "../ApiManager"
 
 
 // this component is for the link in the Employee component that will display the details for the employee.
@@ -17,8 +18,7 @@ export const EmployeeDetails = () => {
     // in the return because the information is an array in the employee object, it cannot be read, because react reads the initial state first then the use effect kicks in, and fetches the data which update the state and it renders again. and since at the initial state there is no value.  because it is a property of a property, specialty and rate is a direct property.  ?. is an optional chaining operator, only keep going down this path if the properties exist.
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?_expand=user&_embed=employeeTickets&userId=${employeeId}`)
-                .then(response => response.json())
+            getEmployeeDetails(employeeId)
                 // placing a parameter to capture the array after json processing
                 .then((data) => {
                     // storing the single employee array in a variable, since only one employee is returned it is position 0
@@ -30,8 +30,6 @@ export const EmployeeDetails = () => {
         [employeeId] // observing employeeId
     )
 
-
-    
     return <section className="employee">
         <header className="employee__header">{employee?.user?.fullName}</header>
         <div>Email: {employee?.user?.email}</div>

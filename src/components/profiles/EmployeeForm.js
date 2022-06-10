@@ -1,5 +1,6 @@
 import { click } from "@testing-library/user-event/dist/click"
 import { useEffect, useState } from "react"
+import { getIndEmployees, saveEmployeeEdit } from "../ApiManager"
 
 
 // form to change employee state data. 
@@ -24,8 +25,7 @@ export const EmployeeForm = () => {
     // TODO: Get employee profile info from API and update state
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?userId=${honeyUserObject.id}`)
-                .then(response => response.json())
+            getIndEmployees(honeyUserObject)
                 .then((data) => {
                     const employeeObject = data[0]
                     updateProfile(employeeObject)
@@ -49,15 +49,7 @@ export const EmployeeForm = () => {
             TODO: Perform the PUT fetch() call here to update the profile.
             Navigate user to home page when done.
         */
-
-        return fetch(`http://localhost:8088/employees/${profile.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(profile)
-        })
-            .then(response => response.json())
+            saveEmployeeEdit(profile)
             .then(() => {
                 setFeedback("Employee profile successfully saved")
             })

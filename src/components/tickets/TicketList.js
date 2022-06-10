@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { getTickets, getEmployeesWithUsers } from "../ApiManager"
 import { Ticket } from "./Ticket"
 import "./Tickets.css"
 
@@ -30,8 +31,7 @@ export const TicketList = ({ searchTermState }) => {
 
     // declared function to run the fetch and now can invoke the function whenever we want. have to pass the function to the props
     const getAllTickets = () => {
-        fetch(`http://localhost:8088/serviceTickets?&_embed=employeeTickets`)
-            .then(response => response.json())
+            getTickets()
             .then((ticketArray) => {
                 setTickets(ticketArray)
             })
@@ -43,9 +43,7 @@ export const TicketList = ({ searchTermState }) => {
     useEffect(
         () => {
             getAllTickets()
-
-            fetch(`http://localhost:8088/employees?_expand=user`)
-                .then(response => response.json())
+            getEmployeesWithUsers()
                 // placing a parameter to capture the array after json processing
                 .then((employeeArray) => {
                     // then calling the setter function of setTickets and passing the value of ticketArray

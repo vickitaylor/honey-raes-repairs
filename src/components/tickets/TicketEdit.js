@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { getTicketEdits, saveTicketEdit } from "../ApiManager"
 
 // component to allow the customers to edit their service tickets. 
 
@@ -17,8 +18,7 @@ export const TicketEdit = () => {
     // to get ticket from API and update state, observing ticketId
     useEffect(
         () => {
-            fetch(`http://localhost:8088/serviceTickets/${ticketId}`)
-                .then(response => response.json())
+            getTicketEdits(ticketId)
                 .then((data) => {
                     updateTicket(data)
                 })
@@ -30,14 +30,7 @@ export const TicketEdit = () => {
         event.preventDefault()
 
         // put for the service request edit. 
-        return fetch(`http://localhost:8088/serviceTickets/${ticketId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(ticket)
-        })
-            .then(response => response.json())
+            saveTicketEdit(ticketId, ticket)
             .then(() => {
                 navigate("/tickets")
             })

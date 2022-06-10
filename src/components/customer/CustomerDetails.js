@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getCustomerDetails } from "../ApiManager"
 
 
 // component to display the individual customer information when their name link is clicked
@@ -10,8 +11,7 @@ export const CustomerDetails = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers?_expand=user&userId=${customerId}`)
-            .then(response => response.json())
+            getCustomerDetails(customerId)
             // parameter to capture the data returned from json
             .then((data) => {
                 // declaring a variable to hold the single customer data 

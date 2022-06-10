@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { saveEmployeeToTicket, deleteTicket, saveTicketComplete } from "../ApiManager"
 
 export const Ticket = ({ ticketObject, currentUser, employees, getAllTickets }) => {
 
@@ -18,17 +19,7 @@ export const Ticket = ({ ticketObject, currentUser, employees, getAllTickets }) 
         if (currentUser.staff) {
             return <button
                 onClick={() => {
-                    return fetch(`http://localhost:8088/employeeTickets`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            employeeId: userEmployee.id,
-                            serviceTicketId: ticketObject.id
-                        })
-                    })
-                        .then(response => response.json())
+                    saveEmployeeToTicket(userEmployee, ticketObject)
                         .then(() => {
                             // need to get the state from the API again, since the state has changed, without this the ticket still has a claim button.  
                             getAllTickets()
@@ -55,12 +46,10 @@ export const Ticket = ({ ticketObject, currentUser, employees, getAllTickets }) 
     const deleteButton = () => {
         if (!currentUser.staff) {
             return <button onClick={() => {
-                fetch(`http://localhost:8088/serviceTickets/${ticketObject.id}`, {
-                    method: "DELETE",
+                deleteTicket(ticketObject)
+                .then(() => {
+                    getAllTickets()
                 })
-                    .then(() => {
-                        getAllTickets()
-                    })
             }} className="ticket__delete">Delete</button>
         } else {
             return ""
@@ -77,14 +66,7 @@ export const Ticket = ({ ticketObject, currentUser, employees, getAllTickets }) 
             dateCompleted: new Date()
         }
 
-        return fetch(`http://localhost:8088/serviceTickets/${ticketObject.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(copy)
-        })
-            .then(response => response.json())
+        saveTicketComplete(ticketObject, copy)
             .then(getAllTickets)
     }
 

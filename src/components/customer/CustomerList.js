@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Customer } from "./Customer"
+import { getAllCustomers } from "../ApiManager"
 import "./Customer.css"
 
 
@@ -10,8 +11,7 @@ export const CustomerList = () =>{
     // fetching the customers from the API, with the user data
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers?_expand=user`)
-                .then(response => response.json())
+            getAllCustomers()
                 // capturing the data from the fetch into the customer array 
                 .then((customerArray) => {
                     // calling the setter function and passing the customer array into it to set state

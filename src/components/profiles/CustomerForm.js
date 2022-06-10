@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getIndCustomers, saveCustomerEdit } from "../ApiManager"
 
 // form to change customer state data. 
 
@@ -20,8 +21,7 @@ export const CustomerForm = () => {
     // TODO: Get customer profile info from API and update state
     useEffect(
         () => {
-            fetch(`http://localhost:8088/customers?userId=${honeyUserObject.id}`)
-                .then(response => response.json())
+            getIndCustomers(honeyUserObject)
                 .then((data) => {
                     const customerObject = data[0]
                     updateProfile(customerObject)
@@ -45,14 +45,7 @@ export const CustomerForm = () => {
             Navigate user to home page when done.
         */
 
-        return fetch(`http://localhost:8088/customers/${profile.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(profile)
-        })
-            .then(response => response.json())
+        saveCustomerEdit(profile)
             .then(() => {
                 setFeedback("Customer profile successfully saved")
             })

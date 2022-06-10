@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Employee } from "./Employee"
+import { getAllEmployees } from "../ApiManager"
 import "./Employee.css"
 
 // component to show the customers a list of the employees
@@ -10,8 +11,7 @@ export const EmployeeList = () => {
     // fetching the user array from the API, and only getting users whose isStaff property is true
     useEffect(
         () => {
-            fetch(`http://localhost:8088/users?isStaff=true`)
-                .then(response => response.json())
+            getAllEmployees () 
                 // placing a parameter to capture the array after json processing
                 .then((employeeArray) => {
                     // then calling the setter function of setEmployees and passing the value of employeeArray 
